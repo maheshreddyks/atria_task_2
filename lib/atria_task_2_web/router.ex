@@ -19,6 +19,13 @@ defmodule AtriaTask2Web.Router do
     get "/", PageController, :index
   end
 
+  scope "/api", AtriaTask2Web do
+    pipe_through([:api])
+
+    post("/admin/signup", UserController, :admin_signup)
+    post("/v1/signup", UserController, :user_signup)
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", AtriaTask2Web do
   #   pipe_through :api
