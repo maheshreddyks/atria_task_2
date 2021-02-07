@@ -50,15 +50,15 @@ defmodule AtriaTask2Web.EventControllerTest do
     {:ok, result} = conn_res_2.resp_body |> Jason.decode(keys: :atoms)
     event = hd(result[:events])
     assert result.status == true
+    params = %{"event_id" => event.event_id}
+    edit_params = Map.merge(update_params, params)
     ## Update Event
-    conn_res_3 =
-      post(conn, Routes.event_path(conn, :admin_update_event, event.event_id, update_params))
+    conn_res_3 = post(conn, Routes.event_path(conn, :admin_update_event, edit_params))
 
     {:ok, result} = conn_res_3.resp_body |> Jason.decode(keys: :atoms)
     assert result.status == true
-
     ## Delete Event
-    conn_res_4 = delete(conn, Routes.event_path(conn, :admin_delete_event, event.event_id))
+    conn_res_4 = delete(conn, Routes.event_path(conn, :admin_delete_event, params))
     {:ok, result} = conn_res_4.resp_body |> Jason.decode(keys: :atoms)
     assert result.status == true
   end

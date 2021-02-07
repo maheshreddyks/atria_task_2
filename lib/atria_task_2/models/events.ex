@@ -99,7 +99,7 @@ defmodule AtriaTask2.Models.Events do
 
   @spec get_event(map) :: map
   def get_event(params) do
-    Repo.get_by(AtriaTask2.Models.Events, id: params["id"])
+    Repo.get_by(AtriaTask2.Models.Events, id: params["event_id"])
   end
 
   def get_all_events() do
