@@ -1,6 +1,6 @@
 defmodule AtriaTask2Web.EventController do
   use AtriaTask2Web, :controller
-  alias AtriaTask2.Models.{Events, EventManagement, Users}
+  alias AtriaTask2.Models.{Events, EventManagement}
   alias AtriaTask2.Utils
   alias AtriaTask2Web.ChangesetView
 
@@ -391,10 +391,10 @@ defmodule AtriaTask2Web.EventController do
       details =
         case params["event_type"] do
           "confirmed" ->
-            details = %{user_id: current_user.user_id, rsvp_status: true}
+            %{user_id: current_user.user_id, rsvp_status: true}
 
           "cancelled" ->
-            details = %{user_id: current_user.user_id, rsvp_status: false}
+            %{user_id: current_user.user_id, rsvp_status: false}
         end
 
       case EventManagement.get_events_link_of_user(details) do
