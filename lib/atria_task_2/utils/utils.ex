@@ -1,4 +1,7 @@
 defmodule AtriaTask2.Utils do
+  @doc """
+    List outs event details from the meta data as Jason Parser cant pass the original data as json.
+  """
   def get_events_from_meta_deta(list_of_events, type \\ :default) do
     Enum.reduce(list_of_events, [], fn event, acc ->
       data = %{
@@ -18,6 +21,9 @@ defmodule AtriaTask2.Utils do
     end)
   end
 
+  @doc """
+    List outs event details with  additional details from the meta data as Jason Parser cant pass the original data as json.
+  """
   def get_events_from_user_filter_events_meta_deta(list_of_events) do
     Enum.reduce(list_of_events, [], fn event, acc ->
       data = %{
@@ -37,6 +43,9 @@ defmodule AtriaTask2.Utils do
     end)
   end
 
+  @doc """
+    Sending the linked event list with additional details
+  """
   def get_events_for_rsvp_count(list_of_event_links) do
     data =
       Enum.reduce(list_of_event_links, [], fn event_link, acc ->

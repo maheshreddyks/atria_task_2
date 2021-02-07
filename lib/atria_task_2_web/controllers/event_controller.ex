@@ -29,6 +29,9 @@ defmodule AtriaTask2Web.EventController do
          ]
   )
 
+  @doc """
+    Lists all events for admin and for non-admins
+  """
   def list_events(conn, params) do
     case params["type"] do
       "admin" ->
@@ -39,6 +42,9 @@ defmodule AtriaTask2Web.EventController do
     end
   end
 
+  @doc """
+    Lists all events for admin
+  """
   def list_all_events(conn, _params) do
     all_topics =
       Events.get_all_events()
@@ -48,6 +54,9 @@ defmodule AtriaTask2Web.EventController do
     json(conn, response)
   end
 
+  @doc """
+    Lists all events for non_admin
+  """
   def list_all_user_events(conn, _params) do
     all_topics =
       Events.get_all_events()
@@ -57,6 +66,9 @@ defmodule AtriaTask2Web.EventController do
     json(conn, response)
   end
 
+  @doc """
+    Add a Event by Admin
+  """
   def admin_add_event(conn, params) do
     current_user = conn.assigns[:current_user]
     params = Map.put(params, "user_id", current_user.user_id)
@@ -76,6 +88,9 @@ defmodule AtriaTask2Web.EventController do
     end
   end
 
+  @doc """
+    Update a Event by Admin
+  """
   def admin_update_event(conn, params) do
     current_user = conn.assigns[:current_user]
     params = Map.put(params, "user_id", current_user.user_id)
@@ -129,6 +144,9 @@ defmodule AtriaTask2Web.EventController do
     end
   end
 
+  @doc """
+    Delete a Event by Admin
+  """
   def admin_delete_event(conn, params) do
     current_user = conn.assigns[:current_user]
     params = Map.put(params, "user_id", current_user.user_id)
@@ -160,6 +178,9 @@ defmodule AtriaTask2Web.EventController do
     end
   end
 
+  @doc """
+    Add RSVP status for an event to a user
+  """
   def user_add_event(conn, params) do
     current_user = conn.assigns[:current_user]
 
@@ -258,6 +279,9 @@ defmodule AtriaTask2Web.EventController do
     end
   end
 
+  @doc """
+    Cancel RSVP status for an event to a user
+  """
   def user_delete_event(conn, params) do
     current_user = conn.assigns[:current_user]
 
@@ -356,6 +380,9 @@ defmodule AtriaTask2Web.EventController do
     end
   end
 
+  @doc """
+    Confirmed / Cancelled events for a user
+  """
   def user_filter_events(conn, params) do
     if !Utils.is_empty(params["event_type"]) &&
          params["event_type"] in ["confirmed", "cancelled"] do
@@ -399,6 +426,9 @@ defmodule AtriaTask2Web.EventController do
     end
   end
 
+  @doc """
+    Confirmed / Cancelled events for a user
+  """
   def event_calender(conn, _params) do
     current_user = conn.assigns[:current_user]
 
@@ -425,6 +455,9 @@ defmodule AtriaTask2Web.EventController do
     end
   end
 
+  @doc """
+    RSVP Count for a admin for an event
+  """
   def rsvp_count(conn, params) do
     case existing_data = Events.get_event(params) do
       nil ->
@@ -460,6 +493,9 @@ defmodule AtriaTask2Web.EventController do
     end
   end
 
+  @doc """
+    RSVP Cancelled Count for a admin for an event
+  """
   def rsvp_cancelled_count(conn, params) do
     case existing_data = Events.get_event(params) do
       nil ->

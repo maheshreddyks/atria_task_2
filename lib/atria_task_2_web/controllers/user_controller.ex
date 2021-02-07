@@ -3,6 +3,9 @@ defmodule AtriaTask2Web.UserController do
   alias AtriaTask2.Models.Users
   alias AtriaTask2Web.ChangesetView
 
+  @doc """
+    User/Admin Signup
+  """
   def signup(conn, params) do
     if params["type"] in ["admin", "v1"] do
       {params, changeset_type} =
