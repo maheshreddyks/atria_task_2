@@ -21,7 +21,8 @@ defmodule AtriaTask2Web.EventController do
     when action in [
            :list_all_user_events,
            :user_add_event,
-           :user_delete_event
+           :user_delete_event,
+           :user_filter_events
          ]
   )
 
@@ -47,7 +48,7 @@ defmodule AtriaTask2Web.EventController do
   def list_all_user_events(conn, _params) do
     all_topics =
       Events.get_all_events()
-      |> Utils.get_events_from_meta_deta()
+      |> Utils.get_events_from_meta_deta(:users)
 
     response = %{status: true, count: length(all_topics), events: all_topics}
     json(conn, response)
@@ -142,7 +143,7 @@ defmodule AtriaTask2Web.EventController do
 
       _ ->
         case Events.delete_event(existing_data) do
-          {:ok, changeset} ->
+          {:ok, %{event: changeset}} ->
             response = ChangesetView.translate_ok(changeset, "Event Delete")
             json(conn, response)
 
@@ -342,6 +343,49 @@ defmodule AtriaTask2Web.EventController do
       response = %{
         status: false,
         message: "Event ID not sent in request"
+      }
+
+      conn
+      |> put_status(422)
+      |> json(response)
+    end
+  end
+
+  def user_filter_events(conn, params) do
+    if !Utils.is_empty(params["event_type"]) &&
+         params["event_type"] in ["confirmed", "cancelled"] do
+      current_user = conn.assigns[:current_user]
+
+      details =
+        case params["event_type"] do
+          "confirmed" ->
+            details = %{user_id: current_user.user_id, rsvp_status: true}
+
+          "cancelled" ->
+            details = %{user_id: current_user.user_id, rsvp_status: false}
+        end
+
+      case EventManagement.get_events_link_of_user(details) do
+        {false, _data} ->
+          response = %{
+            status: true,
+            message: "No events to show"
+          }
+
+          conn
+          |> put_status(200)
+          |> json(response)
+
+        {true, data} ->
+          events = Utils.get_events_from_user_filter_events_meta_deta(data)
+
+          response = %{status: true, count: length(events), events: events}
+          json(conn, response)
+      end
+    else
+      response = %{
+        status: false,
+        message: "Event Type not available. Please try confirmed/cancelled"
       }
 
       conn

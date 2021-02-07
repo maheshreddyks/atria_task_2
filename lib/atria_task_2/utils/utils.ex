@@ -1,5 +1,5 @@
 defmodule AtriaTask2.Utils do
-  def get_events_from_meta_deta(list_of_events) do
+  def get_events_from_meta_deta(list_of_events, type \\ :default) do
     Enum.reduce(list_of_events, [], fn event, acc ->
       data = %{
         event_id: event.id,
@@ -9,9 +9,28 @@ defmodule AtriaTask2.Utils do
         date: event.date,
         duration: event.duration,
         location: event.location,
-        created_user: event.user.full_name,
         inserted_at: event.inserted_at,
         updated_at: event.updated_at
+      }
+
+      if type == :users, do: Map.put(data, :created_user, event.user.full_name), else: data
+      acc ++ [data]
+    end)
+  end
+
+  def get_events_from_user_filter_events_meta_deta(list_of_events) do
+    Enum.reduce(list_of_events, [], fn event, acc ->
+      data = %{
+        event_id: event.event.id,
+        name: event.event.name,
+        description: event.event.description,
+        type: event.event.type,
+        date: event.event.date,
+        duration: event.event.duration,
+        location: event.event.location,
+        inserted_at: event.event.inserted_at,
+        updated_at: event.event.updated_at,
+        rsvp_status: event.rsvp_status
       }
 
       acc ++ [data]

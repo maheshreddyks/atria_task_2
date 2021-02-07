@@ -6,10 +6,11 @@ defmodule AtriaTask2.Models.EventManagement do
 
   alias AtriaTask2.Repo
   alias AtriaTask2.Models.{Users, Events}
+  alias AtriaTask2.Utils
   @type t :: %__MODULE__{}
   schema "event_management" do
     belongs_to(:user, Users, references: :user_id, type: :integer)
-    belongs_to(:event, Events, references: :event_id, type: :integer)
+    belongs_to(:event, Events, references: :id, type: :integer)
     field(:rsvp_status, :boolean)
     timestamps()
   end
@@ -70,7 +71,7 @@ defmodule AtriaTask2.Models.EventManagement do
     |> Repo.insert()
   end
 
-  @spec create_event_link(map) :: map
+  @spec get_event_link(map) :: map
   def get_event_link(attrs \\ %{}) do
     data =
       Repo.get_by(AtriaTask2.Models.EventManagement,
@@ -78,7 +79,20 @@ defmodule AtriaTask2.Models.EventManagement do
         event_id: attrs[:event_id]
       )
 
+    IO.inspect(data)
     if data, do: {true, data}, else: {false, nil}
+  end
+
+  @spec get_events_link_of_user(map) :: map
+  def get_events_link_of_user(attrs \\ %{}) do
+    data =
+      from(evm in AtriaTask2.Models.EventManagement,
+        where: evm.user_id == ^attrs[:user_id] and evm.rsvp_status == ^attrs[:rsvp_status],
+        preload: [:event]
+      )
+      |> Repo.all()
+
+    if !Utils.is_empty(data), do: {true, data}, else: {false, nil}
   end
 
   @spec update_event_link(map) :: map

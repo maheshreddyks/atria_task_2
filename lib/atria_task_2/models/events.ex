@@ -1,11 +1,12 @@
 defmodule AtriaTask2.Models.Events do
   import Ecto.Query, warn: false
   import Ecto.Changeset
+  alias Ecto.Multi
 
   use Ecto.Schema
 
   alias AtriaTask2.Repo
-  alias AtriaTask2.Models.Users
+  alias AtriaTask2.Models.{Users, EventManagement}
   @type t :: %__MODULE__{}
   schema "events" do
     field(:name, :string)
@@ -93,7 +94,12 @@ defmodule AtriaTask2.Models.Events do
 
   @spec delete_event(map) :: map
   def delete_event(attrs) do
-    Repo.delete(attrs)
+    query = from(evm in EventManagement, where: evm.event_id == ^attrs.id)
+
+    Multi.new()
+    |> Multi.delete(:event, attrs)
+    |> Multi.delete_all(:event_management, query)
+    |> Repo.transaction()
   end
 
   @spec get_event(map) :: map
