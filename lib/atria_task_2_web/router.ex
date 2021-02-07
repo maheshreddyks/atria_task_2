@@ -26,8 +26,8 @@ defmodule AtriaTask2Web.Router do
 
     get("/:type/event/list", EventController, :list_events)
     post("/:type/event/add", EventController, :add_event)
-    post("/admin/event/update", EventController, :admin_update_event)
-    delete("/admin/event/delete", EventController, :admin_delete_event)
+    post("/admin/event/update/:id", EventController, :admin_update_event)
+    delete("/admin/event/delete/:id", EventController, :admin_delete_event)
   end
 
   # Other scopes may use custom stacks.
