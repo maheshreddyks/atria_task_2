@@ -22,7 +22,8 @@ defmodule AtriaTask2Web.EventController do
            :list_all_user_events,
            :user_add_event,
            :user_delete_event,
-           :user_filter_events
+           :user_filter_events,
+           :event_calender
          ]
   )
 
@@ -94,7 +95,7 @@ defmodule AtriaTask2Web.EventController do
         cond do
           changeset.changes == %{} ->
             response = %{
-              status: true,
+              status: false,
               message: "No Changes to update"
             }
 
@@ -163,84 +164,85 @@ defmodule AtriaTask2Web.EventController do
     if !Utils.is_empty(params["id"]) do
       existing_data = Events.get_event(params)
 
-      event_details = %{
-        user_id: current_user.user_id,
-        event_id: existing_data.id
-      }
+      if existing_data do
+        event_details = %{
+          user_id: current_user.user_id,
+          event_id: existing_data.id
+        }
 
-      {link_exists?, data} = EventManagement.get_event_link(event_details)
+        {link_exists?, data} = EventManagement.get_event_link(event_details)
 
-      cond do
-        existing_data == nil ->
-          response = %{
-            status: false,
-            message: "Event not available in records to add"
-          }
+        cond do
+          link_exists? ->
+            if data.rsvp_status do
+              response = %{
+                status: false,
+                message: "Event already in RSVP"
+              }
 
-          conn
-          |> put_status(422)
-          |> json(response)
+              conn
+              |> put_status(422)
+              |> json(response)
+            else
+              event_details = %{
+                user_id: current_user.user_id,
+                event_id: existing_data.id,
+                rsvp_status: true
+              }
 
-        link_exists? ->
-          if data.rsvp_status do
-            response = %{
-              status: false,
-              message: "Event already in RSVP"
-            }
+              changeset = EventManagement.changeset(data, event_details)
 
-            conn
-            |> put_status(422)
-            |> json(response)
-          else
+              if changeset.valid? do
+                case EventManagement.update_event_link(changeset) do
+                  {:ok, changeset} ->
+                    response = ChangesetView.translate_ok(changeset, "Event User Add")
+                    json(conn, response)
+
+                  {:error, changeset} ->
+                    response = ChangesetView.translate_errors(changeset)
+
+                    conn
+                    |> put_status(422)
+                    |> json(response)
+                end
+              else
+                response = ChangesetView.translate_errors(changeset)
+
+                conn
+                |> put_status(422)
+                |> json(response)
+              end
+            end
+
+          true ->
             event_details = %{
               user_id: current_user.user_id,
               event_id: existing_data.id,
               rsvp_status: true
             }
 
-            changeset = EventManagement.changeset(data, event_details)
+            case EventManagement.create_event_link(event_details) do
+              {:ok, changeset} ->
+                response = ChangesetView.translate_ok(changeset, "Event User Add")
+                json(conn, response)
 
-            if changeset.valid? do
-              case EventManagement.update_event_link(changeset) do
-                {:ok, changeset} ->
-                  response = ChangesetView.translate_ok(changeset, "Event User Add")
-                  json(conn, response)
+              {:error, changeset} ->
+                response = ChangesetView.translate_errors(changeset)
 
-                {:error, changeset} ->
-                  response = ChangesetView.translate_errors(changeset)
-
-                  conn
-                  |> put_status(422)
-                  |> json(response)
-              end
-            else
-              response = ChangesetView.translate_errors(changeset)
-
-              conn
-              |> put_status(422)
-              |> json(response)
+                conn
+                |> put_status(422)
+                |> json(response)
             end
-          end
+        end
+      else
+        response = %{
+          status: false,
+          message: "Event not available in records to add"
+        }
 
-        true ->
-          event_details = %{
-            user_id: current_user.user_id,
-            event_id: existing_data.id,
-            rsvp_status: true
-          }
-
-          case EventManagement.create_event_link(event_details) do
-            {:ok, changeset} ->
-              response = ChangesetView.translate_ok(changeset, "Event User Add")
-              json(conn, response)
-
-            {:error, changeset} ->
-              response = ChangesetView.translate_errors(changeset)
-
-              conn
-              |> put_status(422)
-              |> json(response)
-          end
+        conn
+        |> put_status(422)
+        |> json(response)
       end
     else
       response = %{
@@ -260,84 +262,85 @@ defmodule AtriaTask2Web.EventController do
     if !Utils.is_empty(params["id"]) do
       existing_data = Events.get_event(params)
 
-      event_details = %{
-        user_id: current_user.user_id,
-        event_id: existing_data.id
-      }
+      if existing_data do
+        event_details = %{
+          user_id: current_user.user_id,
+          event_id: existing_data.id
+        }
 
-      {link_exists?, data} = EventManagement.get_event_link(event_details)
+        {link_exists?, data} = EventManagement.get_event_link(event_details)
 
-      cond do
-        existing_data == nil ->
-          response = %{
-            status: false,
-            message: "Event not available in records to add"
-          }
+        cond do
+          link_exists? ->
+            if data.rsvp_status do
+              event_details = %{
+                user_id: current_user.user_id,
+                event_id: existing_data.id,
+                rsvp_status: false
+              }
 
-          conn
-          |> put_status(422)
-          |> json(response)
+              changeset = EventManagement.changeset(data, event_details)
 
-        link_exists? ->
-          if data.rsvp_status do
+              if changeset.valid? do
+                case EventManagement.update_event_link(changeset) do
+                  {:ok, changeset} ->
+                    response = ChangesetView.translate_ok(changeset, "Event User Cancelled")
+                    json(conn, response)
+
+                  {:error, changeset} ->
+                    response = ChangesetView.translate_errors(changeset)
+
+                    conn
+                    |> put_status(422)
+                    |> json(response)
+                end
+              else
+                response = ChangesetView.translate_errors(changeset)
+
+                conn
+                |> put_status(422)
+                |> json(response)
+              end
+            else
+              response = %{
+                status: false,
+                message: "Event status already in RSVP Cancelled"
+              }
+
+              conn
+              |> put_status(422)
+              |> json(response)
+            end
+
+          true ->
             event_details = %{
               user_id: current_user.user_id,
               event_id: existing_data.id,
               rsvp_status: false
             }
 
-            changeset = EventManagement.changeset(data, event_details)
+            case EventManagement.create_event_link(event_details) do
+              {:ok, changeset} ->
+                response = ChangesetView.translate_ok(changeset, "Event User Add")
+                json(conn, response)
 
-            if changeset.valid? do
-              case EventManagement.update_event_link(changeset) do
-                {:ok, changeset} ->
-                  response = ChangesetView.translate_ok(changeset, "Event User Cancelled")
-                  json(conn, response)
+              {:error, changeset} ->
+                response = ChangesetView.translate_errors(changeset)
 
-                {:error, changeset} ->
-                  response = ChangesetView.translate_errors(changeset)
-
-                  conn
-                  |> put_status(422)
-                  |> json(response)
-              end
-            else
-              response = ChangesetView.translate_errors(changeset)
-
-              conn
-              |> put_status(422)
-              |> json(response)
+                conn
+                |> put_status(422)
+                |> json(response)
             end
-          else
-            response = %{
-              status: false,
-              message: "Event status already in RSVP Cancelled"
-            }
+        end
+      else
+        response = %{
+          status: false,
+          message: "Event not available in records to add"
+        }
 
-            conn
-            |> put_status(422)
-            |> json(response)
-          end
-
-        true ->
-          event_details = %{
-            user_id: current_user.user_id,
-            event_id: existing_data.id,
-            rsvp_status: false
-          }
-
-          case EventManagement.create_event_link(event_details) do
-            {:ok, changeset} ->
-              response = ChangesetView.translate_ok(changeset, "Event User Add")
-              json(conn, response)
-
-            {:error, changeset} ->
-              response = ChangesetView.translate_errors(changeset)
-
-              conn
-              |> put_status(422)
-              |> json(response)
-          end
+        conn
+        |> put_status(422)
+        |> json(response)
       end
     else
       response = %{
@@ -368,7 +371,7 @@ defmodule AtriaTask2Web.EventController do
       case EventManagement.get_events_link_of_user(details) do
         {false, _data} ->
           response = %{
-            status: true,
+            status: false,
             message: "No events to show"
           }
 
@@ -391,6 +394,32 @@ defmodule AtriaTask2Web.EventController do
       conn
       |> put_status(422)
       |> json(response)
+    end
+  end
+
+  def event_calender(conn, _params) do
+    current_user = conn.assigns[:current_user]
+
+    details = %{user_id: current_user.user_id, rsvp_status: true}
+
+    case EventManagement.get_events_link_of_user(details) do
+      {false, _data} ->
+        response = %{
+          status: false,
+          message: "No events to show"
+        }
+
+        conn
+        |> put_status(200)
+        |> json(response)
+
+      {true, data} ->
+        events =
+          Utils.get_events_from_user_filter_events_meta_deta(data)
+          |> Enum.group_by(& &1.date)
+
+        response = %{status: true, events: events}
+        json(conn, response)
     end
   end
 end

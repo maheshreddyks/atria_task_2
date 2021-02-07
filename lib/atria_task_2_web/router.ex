@@ -32,6 +32,7 @@ defmodule AtriaTask2Web.Router do
     delete("/v1/event/delete/:id", EventController, :user_delete_event)
 
     get("/:type/event/list/:event_type", EventController, :user_filter_events)
+    get("/:type/event_calender", EventController, :event_calender)
   end
 
   # Other scopes may use custom stacks.
