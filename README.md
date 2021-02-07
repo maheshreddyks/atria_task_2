@@ -11,6 +11,11 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
+
+## Postman Collection
+
+  * https://www.getpostman.com/collections/ed776b073a99b47af75d
+
 ## Learn more
 
   * Official website: https://www.phoenixframework.org/
