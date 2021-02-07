@@ -11,7 +11,9 @@ defmodule AtriaTask2Web.EventController do
            :list_all_events,
            :admin_add_event,
            :admin_update_event,
-           :admin_delete_event
+           :admin_delete_event,
+           :rsvp_count,
+           :rsvp_cancelled_count
          ]
   )
 
@@ -420,6 +422,76 @@ defmodule AtriaTask2Web.EventController do
 
         response = %{status: true, events: events}
         json(conn, response)
+    end
+  end
+
+  def rsvp_count(conn, params) do
+    case existing_data = Events.get_event(params) do
+      nil ->
+        response = %{
+          status: false,
+          message: "Event name not available to fetch RSVP count"
+        }
+
+        conn
+        |> put_status(422)
+        |> json(response)
+
+      _ ->
+        details = %{event_id: existing_data.id, rsvp_status: true}
+
+        case EventManagement.get_events_link_of_event(details) do
+          {false, _data} ->
+            response = %{
+              status: false,
+              message: "No RSVP's to show"
+            }
+
+            conn
+            |> put_status(200)
+            |> json(response)
+
+          {true, data} ->
+            events = Utils.get_events_for_rsvp_count(data)
+
+            response = %{status: true, event: events}
+            json(conn, response)
+        end
+    end
+  end
+
+  def rsvp_cancelled_count(conn, params) do
+    case existing_data = Events.get_event(params) do
+      nil ->
+        response = %{
+          status: false,
+          message: "Event name not available to fetch RSVP count"
+        }
+
+        conn
+        |> put_status(422)
+        |> json(response)
+
+      _ ->
+        details = %{event_id: existing_data.id, rsvp_status: false}
+
+        case EventManagement.get_events_link_of_event(details) do
+          {false, _data} ->
+            response = %{
+              status: false,
+              message: "No RSVP's to show"
+            }
+
+            conn
+            |> put_status(200)
+            |> json(response)
+
+          {true, data} ->
+            events = Utils.get_events_for_rsvp_count(data)
+
+            response = %{status: true, event: events}
+            json(conn, response)
+        end
     end
   end
 end

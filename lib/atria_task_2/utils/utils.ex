@@ -37,6 +37,36 @@ defmodule AtriaTask2.Utils do
     end)
   end
 
+  def get_events_for_rsvp_count(list_of_event_links) do
+    data =
+      Enum.reduce(list_of_event_links, [], fn event_link, acc ->
+        data = %{
+          full_name: event_link.user.full_name,
+          age: event_link.user.age,
+          email: event_link.user.email
+        }
+
+        acc ++ [data]
+      end)
+
+    event_link = hd(list_of_event_links)
+    event = event_link.event
+
+    %{
+      date: event.date,
+      description: event.description,
+      duration: event.duration,
+      host: event.host,
+      event_id: event.id,
+      location: event.location,
+      name: event.name,
+      updated_at: event.updated_at,
+      inserted_at: event.inserted_at,
+      rsvp_status: event_link.rsvp_status,
+      rsvp_count: data
+    }
+  end
+
   # ------------------------------------------------------------------
 
   @doc """

@@ -33,6 +33,9 @@ defmodule AtriaTask2Web.Router do
 
     get("/:type/event/list/:event_type", EventController, :user_filter_events)
     get("/:type/event_calender", EventController, :event_calender)
+
+    get("/:type/rsvp_count/:id", EventController, :rsvp_count)
+    get("/:type/rsvp_cancelled_count/:id", EventController, :rsvp_cancelled_count)
   end
 
   # Other scopes may use custom stacks.

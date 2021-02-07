@@ -79,7 +79,6 @@ defmodule AtriaTask2.Models.EventManagement do
         event_id: attrs[:event_id]
       )
 
-    IO.inspect(data)
     if data, do: {true, data}, else: {false, nil}
   end
 
@@ -89,6 +88,18 @@ defmodule AtriaTask2.Models.EventManagement do
       from(evm in AtriaTask2.Models.EventManagement,
         where: evm.user_id == ^attrs[:user_id] and evm.rsvp_status == ^attrs[:rsvp_status],
         preload: [:event]
+      )
+      |> Repo.all()
+
+    if !Utils.is_empty(data), do: {true, data}, else: {false, nil}
+  end
+
+  @spec get_events_link_of_event(map) :: map
+  def get_events_link_of_event(attrs \\ %{}) do
+    data =
+      from(evm in AtriaTask2.Models.EventManagement,
+        where: evm.event_id == ^attrs[:event_id] and evm.rsvp_status == ^attrs[:rsvp_status],
+        preload: [:event, :user]
       )
       |> Repo.all()
 
