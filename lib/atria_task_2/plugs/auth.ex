@@ -7,8 +7,6 @@ defmodule AtriaTask2.Plug.Authenticate do
   def init(default), do: default
 
   def call(conn, _reason) do
-    {user, pass} = Plug.BasicAuth.parse_basic_auth(conn)
-
     with {user, pass} <- Plug.BasicAuth.parse_basic_auth(conn),
          {true, %AtriaTask2.Models.Users{} = user} <-
            AtriaTask2.Models.Users.find_by_username_and_password(user, pass) do

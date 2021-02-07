@@ -4,11 +4,11 @@ defmodule AtriaTask2Web.UserController do
   alias AtriaTask2Web.ChangesetView
 
   def signup(conn, params) do
-    if params["type"] in ["admin", "V1"] do
+    if params["type"] in ["admin", "v1"] do
       {params, changeset_type} =
         case params["type"] || params[:type] do
           "admin" -> {Map.put(params, "admin", true), "Admin"}
-          "V1" -> {Map.put(params, "admin", false), "User"}
+          "v1" -> {Map.put(params, "admin", false), "User"}
         end
 
       case Users.create_user(params) do

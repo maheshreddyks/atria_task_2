@@ -42,7 +42,7 @@ defmodule AtriaTask2Web.EventControllerTest do
     }
 
     ## Add Event
-    conn_res_1 = post(conn, Routes.event_path(conn, :add_event, "admin", params))
+    conn_res_1 = post(conn, Routes.event_path(conn, :admin_add_event, "admin", params))
     {:ok, result} = conn_res_1.resp_body |> Jason.decode(keys: :atoms)
     assert result.status == true
     ## List Event

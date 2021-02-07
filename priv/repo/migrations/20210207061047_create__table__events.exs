@@ -14,7 +14,5 @@ defmodule AtriaTask2.Repo.Migrations.Create_Table_Events do
 
       timestamps()
     end
-
-    create unique_index(:events, [:name])
   end
 end

@@ -43,7 +43,6 @@ defmodule AtriaTask2.Models.Events do
       :location,
       :user_id
     ])
-    |> unique_constraint(:email)
   end
 
   @doc """

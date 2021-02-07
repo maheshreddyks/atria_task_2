@@ -47,7 +47,7 @@ defmodule AtriaTask2Web.UserControllerTest do
       "type" => "v1"
     }
 
-    conn = post(conn, Routes.user_path(conn, :signup, "V1", user))
+    conn = post(conn, Routes.user_path(conn, :signup, "v1", user))
     {:ok, result} = conn.resp_body |> Jason.decode(keys: :atoms)
     assert result.status == true
     assert result.message == "Mahesh Reddy user signed up successfully"
@@ -62,7 +62,7 @@ defmodule AtriaTask2Web.UserControllerTest do
       "type" => "v1"
     }
 
-    conn = post(conn, Routes.user_path(conn, :signup, "V1", user))
+    conn = post(conn, Routes.user_path(conn, :signup, "v1", user))
     {:ok, result} = conn.resp_body |> Jason.decode(keys: :atoms)
     assert result.status == false
   end

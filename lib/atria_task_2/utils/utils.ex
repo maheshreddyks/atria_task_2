@@ -17,4 +17,51 @@ defmodule AtriaTask2.Utils do
       acc ++ [data]
     end)
   end
+
+  # ------------------------------------------------------------------
+
+  @doc """
+  Returns `true` if the `val` is empty; otherwise returns `false`
+
+  ### Examples
+
+      iex> Helper.is_empty(%{})
+      true
+
+      iex> Helper.is_empty(nil)
+      true
+
+      iex> Helper.is_empty([])
+      true
+
+      iex> Helper.is_empty("  ")
+      true
+
+      iex> Helper.is_empty("s")
+      false
+  """
+  def is_empty(val) when is_nil(val) do
+    true
+  end
+
+  def is_empty(val) when is_binary(val) do
+    val = String.trim(val)
+    byte_size(val) == 0
+  end
+
+  def is_empty(val) when is_list(val) do
+    Enum.empty?(val)
+  end
+
+  def is_empty(val) when is_map(val) do
+    map_size(val) == 0
+  end
+
+  def is_empty(val) when is_tuple(val) do
+    tuple_size(val) == 0
+  end
+
+  def is_empty(_val) do
+    false
+  end
 end

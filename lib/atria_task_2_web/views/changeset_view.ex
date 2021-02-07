@@ -17,6 +17,14 @@ defmodule AtriaTask2Web.ChangesetView do
     %{message: "#{changeset.name} event created successfully", status: true}
   end
 
+  def translate_ok(_changeset, "Event User Add") do
+    %{message: "RSVP for event created successfully", status: true}
+  end
+
+  def translate_ok(_changeset, "Event User Cancelled") do
+    %{message: "RSVP for event cancelled successfully", status: true}
+  end
+
   def translate_ok(changeset, "Event Update") do
     %{message: "#{changeset.name} event updated successfully", status: true}
   end
