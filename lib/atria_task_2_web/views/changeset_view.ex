@@ -13,6 +13,18 @@ defmodule AtriaTask2Web.ChangesetView do
     %{message: "#{changeset.full_name} admin signed up successfully", status: true}
   end
 
+  def translate_ok(changeset, "Event") do
+    %{message: "#{changeset.name} event created successfully", status: true}
+  end
+
+  def translate_ok(changeset, "Event Update") do
+    %{message: "#{changeset.name} event updated successfully", status: true}
+  end
+
+  def translate_ok(changeset, "Event Delete") do
+    %{message: "#{changeset.name} event deleted successfully", status: true}
+  end
+
   def render("error.json", %{changeset: changeset}) do
     # When encoded, the changeset returns its errors
     # as a JSON object. So we just pass it forward.

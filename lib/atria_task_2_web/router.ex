@@ -22,8 +22,12 @@ defmodule AtriaTask2Web.Router do
   scope "/api", AtriaTask2Web do
     pipe_through([:api])
 
-    post("/admin/signup", UserController, :admin_signup)
-    post("/v1/signup", UserController, :user_signup)
+    post("/:type/signup", UserController, :signup)
+
+    get("/:type/event/list", EventController, :list_events)
+    post("/:type/event/add", EventController, :add_event)
+    post("/admin/event/update/:id", EventController, :admin_update_event)
+    delete("/admin/event/delete/:id", EventController, :admin_delete_event)
   end
 
   # Other scopes may use custom stacks.
