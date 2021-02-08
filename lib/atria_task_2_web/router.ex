@@ -22,20 +22,20 @@ defmodule AtriaTask2Web.Router do
   scope "/api", AtriaTask2Web do
     pipe_through([:api])
 
-    post("/:type/signup", UserController, :signup)
+    post("/:user_type/signup", UserController, :signup)
 
-    get("/:type/event/list", EventController, :list_events)
-    post("/:type/event/add", EventController, :admin_add_event)
-    post("/:type/event/add/:id", EventController, :user_add_event)
+    get("/:user_type/event/list", EventController, :list_events)
+    post("/:user_type/event/add", EventController, :admin_add_event)
+    post("/:user_type/event/add/:id", EventController, :user_add_event)
     post("/admin/event/update/:id", EventController, :admin_update_event)
     delete("/admin/event/delete/:id", EventController, :admin_delete_event)
     delete("/v1/event/delete/:id", EventController, :user_delete_event)
 
-    get("/:type/event/list/:event_type", EventController, :user_filter_events)
-    get("/:type/event_calender", EventController, :event_calender)
+    get("/:user_type/event/list/:event_type", EventController, :user_filter_events)
+    get("/:user_type/event_calender", EventController, :event_calender)
 
-    get("/:type/rsvp_count/:id", EventController, :rsvp_count)
-    get("/:type/rsvp_cancelled_count/:id", EventController, :rsvp_cancelled_count)
+    get("/:user_type/rsvp_count/:id", EventController, :rsvp_count)
+    get("/:user_type/rsvp_cancelled_count/:id", EventController, :rsvp_cancelled_count)
   end
 
   # Other scopes may use custom stacks.

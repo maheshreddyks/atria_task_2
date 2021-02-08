@@ -33,7 +33,7 @@ defmodule AtriaTask2Web.EventController do
     Lists all events for admin and for non-admins
   """
   def list_events(conn, params) do
-    case params["type"] do
+    case params["user_type"] do
       "admin" ->
         list_all_events(conn, params)
 
@@ -260,7 +260,7 @@ defmodule AtriaTask2Web.EventController do
       else
         response = %{
           status: false,
-          message: "Event not available in records to add"
+          message: "Event not available in records to accept"
         }
 
         conn
@@ -361,7 +361,7 @@ defmodule AtriaTask2Web.EventController do
       else
         response = %{
           status: false,
-          message: "Event not available in records to add"
+          message: "Event not available in records to cancel"
         }
 
         conn
@@ -400,8 +400,9 @@ defmodule AtriaTask2Web.EventController do
       case EventManagement.get_events_link_of_user(details) do
         {false, _data} ->
           response = %{
-            status: false,
-            message: "No events to show"
+            status: true,
+            events: [],
+            count: 0
           }
 
           conn
@@ -437,8 +438,8 @@ defmodule AtriaTask2Web.EventController do
     case EventManagement.get_events_link_of_user(details) do
       {false, _data} ->
         response = %{
-          status: false,
-          message: "No events to show"
+          status: true,
+          events: []
         }
 
         conn
@@ -463,7 +464,7 @@ defmodule AtriaTask2Web.EventController do
       nil ->
         response = %{
           status: false,
-          message: "Event name not available to fetch RSVP count"
+          message: "Event not available to fetch RSVP count"
         }
 
         conn
@@ -501,7 +502,7 @@ defmodule AtriaTask2Web.EventController do
       nil ->
         response = %{
           status: false,
-          message: "Event name not available to fetch RSVP count"
+          message: "Event not available to fetch RSVP count"
         }
 
         conn

@@ -53,7 +53,8 @@ defmodule AtriaTask2Web.EventControllerTest do
       "duration" => "45",
       "host" => "Josh",
       "location" => "Adams Beach",
-      "name" => "Medical Event 1"
+      "name" => "Medical Event 1",
+      "type" => "medical"
     }
 
     event_2 = %{
@@ -63,7 +64,8 @@ defmodule AtriaTask2Web.EventControllerTest do
       "duration" => "45",
       "host" => "Josh",
       "location" => "Adams Beach",
-      "name" => "Medical Event 3"
+      "name" => "Medical Event 3",
+      "type" => "medical"
     }
 
     {:ok,

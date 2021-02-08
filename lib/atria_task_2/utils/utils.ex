@@ -9,6 +9,7 @@ defmodule AtriaTask2.Utils do
         name: event.name,
         description: event.description,
         type: event.type,
+        host: event.host,
         date: event.date,
         duration: event.duration,
         location: event.location,

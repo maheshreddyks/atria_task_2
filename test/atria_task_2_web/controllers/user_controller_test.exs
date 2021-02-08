@@ -25,16 +25,14 @@ defmodule AtriaTask2Web.UserControllerTest do
       "email" => "mahesh@testo.in",
       "full_name" => "Mahesh Reddy",
       "password" => "123456",
-      "age" => "26",
-      "type" => "v1"
+      "age" => "26"
     }
 
     user_fail = %{
       "email" => "mahesh@testo.in",
       "full_name" => "Mahesh Reddy",
       "password" => "123456",
-      "age" => "26.45",
-      "type" => "v1"
+      "age" => "26.45"
     }
 
     {:ok, conn: conn, admin: admin, user: user, admin_fail: admin_fail, user_fail: user_fail}
