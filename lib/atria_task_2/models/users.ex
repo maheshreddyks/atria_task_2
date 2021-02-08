@@ -49,8 +49,8 @@ defmodule AtriaTask2.Models.Users do
     change(changeset, password: hash_pwd(password))
   end
 
-  defp hash_pwd(password), do: Bcrypt.hash_pwd_salt(password)
   defp put_password_hash(changeset), do: changeset
+  defp hash_pwd(password), do: Bcrypt.hash_pwd_salt(password)
 
   @doc """
 
@@ -90,7 +90,7 @@ defmodule AtriaTask2.Models.Users do
     |> Repo.insert()
   end
 
-  @spec find_by_username_and_password(string(), string()) :: map
+  @spec find_by_username_and_password(String.t(), String.t()) :: map
   def find_by_username_and_password(email, password) do
     data = Repo.get_by(AtriaTask2.Models.Users, email: email)
 
